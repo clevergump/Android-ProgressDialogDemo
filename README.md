@@ -16,7 +16,7 @@ ProgressDialog mProgressDialog = ProgressDialog.show(MainActivity.this, null, "�
 
 mProgressDialog.dismiss();
 ```
-------缺点是: 每次都要创建一个新的对象. 具体请看源码.   
+------缺点是: 每次都要创建一个新的 `ProgressDialog` 对象. 具体原因请看源码.   
 2. **开发者自己创建 `ProgressDialog`对象, 这时就禁止调用 `ProgressDialog` 类内部定义的有参的静态方法 `show(...)`, 而只能调用父类 `Dialog` 中定义的无参 `show()` 方法.**
 通常代码如下:
 ```java
@@ -37,7 +37,7 @@ if (mProgressDialog == null) {
 mProgressDialog.show();
 ```
 
-	------ 优点是: 一个页面只会创建一个 `ProgressDialog` 对象, 避免了频繁new对象.
+------ 优点是: 一个页面只会创建一个 `ProgressDialog` 对象, 避免了频繁new对象.
 
 ###`ProgressDialog` 的错误用法
 错误用法是: 先通过 new 的方式创建一个 `ProgressDialog` 对象, 例如叫做: `mProgressDialog`, 然后调用该对象的静态有参 `show(...)` 方法, 即: 调用类似于这样的代码: `mProgressDialog.show(context, null, "加载中...", true, true, null)`. 而调用这句代码后, 界面上立刻显示出了一个对话框, 这些操作看上去都很顺利, 那么代码应该都是正确的吧, 但是在需要让当前界面上显示的对话框消失时, 你毫不犹豫地调用 `mProgressDialog.dismiss()` 方法, 却发现对话框并没有取消. 典型的错误代码结构如下:
